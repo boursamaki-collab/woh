@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="km">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>សន្សំប្រាក់សហគមន៍</title>
+<meta name="description" content="ផ្ទាំងគ្រប់គ្រងសន្សំប្រាក់សហគមន៍ — សមាជិក ហ៊ុន កម្ចី ចំណាយ និងការចែកចំណេញ">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500;600;700&family=Moul&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+<header>
+ <div class="logo" aria-hidden="true">ស</div>
+ <h1>សន្សំប្រាក់សហគមន៍<small id="asof"></small></h1>
+ <button class="icon-btn" id="login" type="button">ចូលជា Admin</button>
+ <button class="icon-btn" id="theme" type="button" aria-label="ប្តូរពណ៌ទំព័រ">☾ / ☀</button>
+</header>
+<div id="bars"></div>
+<nav role="tablist" id="tabs">
+ <button role="tab" aria-selected="true" data-t="overview">ទិដ្ឋភាពទូទៅ</button>
+ <button role="tab" aria-selected="false" data-t="members">សមាជិក</button>
+ <button role="tab" aria-selected="false" data-t="monthly">សមាជិកតាមខែ</button>
+ <button role="tab" aria-selected="false" data-t="ledger">កំណត់ត្រាសន្សំ</button>
+ <button role="tab" aria-selected="false" data-t="loans">កម្ចី</button>
+ <button role="tab" aria-selected="false" data-t="finance">ចំណាយ</button>
+ <button role="tab" aria-selected="false" data-t="closing">បិទបញ្ជីចុងឆ្នាំ</button>
+</nav>
+<div id="state" class="state">កំពុងផ្ទុកទិន្នន័យ…</div>
+<main id="app" hidden>
+<section id="overview">
+ <div class="hero">
+  <div><div class="lbl">សមតុល្យសាច់ប្រាក់នៅសល់</div><div class="big"><span id="h-cash"></span><span>រៀល</span></div></div>
+  <div class="sub">
+   <div><b id="h-save"></b><span>ទឹកប្រាក់សន្សំសរុប (រៀល)</span></div>
+   <div><b id="h-loan"></b><span>ប្រាក់ដើមកម្ចីនៅសល់ (រៀល)</span></div>
+   <div><b id="h-mem"></b><span>សមាជិក</span></div>
+   <div><b id="h-sh"></b><span>ហ៊ុនសរុប</span></div>
+  </div>
+ </div>
+ <div class="kpis" id="kpis"></div>
+ <div class="grid2">
+  <div class="card"><h2>ការសន្សំតាមខែ</h2><p class="d">ចំនួនហ៊ុនដែលសមាជិកទិញក្នុងមួយខែ (ហ៊ុនមួយ <span id="sp"></span> រៀល)</p><div id="chart"></div></div>
+  <div class="card"><h2>សមាជិកមានហ៊ុនច្រើនជាងគេ</h2><p class="d">៥ នាក់ដំបូង</p><div class="rank" id="rank"></div></div>
+ </div>
+</section>
+
+<section id="members" hidden>
+ <div class="actions admin-only" data-admin><button class="btn primary" data-act="member-add">+ បន្ថែមសមាជិក</button></div>
+ <div class="card">
+  <h2>បញ្ជីសមាជិក</h2><p class="d">ចំនួនហ៊ុន ទឹកប្រាក់បានបង់ និងចំណែកចំណេញប៉ាន់ស្មាន</p>
+  <input class="search" id="q" type="search" placeholder="ស្វែងរកឈ្មោះ ឬលេខសមាជិក…" aria-label="ស្វែងរកសមាជិក">
+  <div class="tbl"><table><thead><tr><th>សមាជិក</th><th>ចូលរួម</th><th class="n">ខែ</th><th class="n">ហ៊ុន</th><th class="n">បានបង់ (រៀល)</th><th>សមាមាត្រហ៊ុន</th><th class="n">ចំណែកចំណេញ</th><th class="adm"></th></tr></thead><tbody id="mrows"></tbody></table></div>
+ </div>
+</section>
+
+<section id="monthly" hidden>
+ <div class="card">
+  <h2>សមាជិកចូលរួមសន្សំតាមខែ</h2><p class="d">ចំនួនហ៊ុនដែលសមាជិកនីមួយៗទិញក្នុងខែនីមួយៗ (ទទេ = មិនបានចូលរួម)។ ពណ៌កាន់តែចាស់ ហ៊ុនកាន់តែច្រើន។</p>
+  <div class="tbl"><table class="heat"><thead id="mh"></thead><tbody id="mb"></tbody><tfoot id="mf"></tfoot></table></div>
+ </div>
+</section>
+
+<section id="ledger" hidden>
+ <div class="actions" data-admin><button class="btn primary" data-act="save-bulk">+ កត់ត្រាប្រចាំខែ (សមាជិកទាំងអស់)</button><button class="btn" data-act="save-add">+ កត់ត្រាម្នាក់</button></div>
+ <div class="card">
+  <h2>កំណត់ត្រាសន្សំ (ទិញហ៊ុន)</h2><p class="d">ប្រតិបត្តិការទាំងអស់ តាមលំដាប់ថ្មីបំផុតមុន</p>
+  <div class="filters"><select id="fm" aria-label="ជ្រើសរើសសមាជិក"></select><select id="fmo" aria-label="ជ្រើសរើសខែ"></select></div>
+  <div class="tbl"><table><thead><tr><th>កាលបរិច្ឆេទ</th><th>សមាជិក</th><th class="n">ហ៊ុន</th><th class="n">ទឹកប្រាក់ហ៊ុន</th><th class="n">ថ្លៃរដ្ឋបាល</th><th class="n">សរុបទូទាត់</th><th class="adm"></th></tr></thead><tbody id="lrows"></tbody></table></div>
+ </div>
+</section>
+
+<section id="loans" hidden>
+ <div class="actions" data-admin><button class="btn primary" data-act="loan-add">+ បង្កើតកម្ចីថ្មី</button><button class="btn" data-act="repay-add">+ កត់ត្រាការសងប្រាក់ដើម</button></div>
+ <div class="kpis" id="lkpis"></div>
+ <div class="loan" id="lcards"></div>
+</section>
+
+<section id="finance" hidden>
+ <div class="actions" data-admin><button class="btn primary" data-act="exp-add">+ បន្ថែមចំណាយ</button></div>
+ <div class="card"><h2>កំណត់ត្រាចំណាយ</h2><p class="d">ចំណាយរដ្ឋបាលរបស់សហគមន៍</p><div class="tbl"><table><thead><tr><th>កាលបរិច្ឆេទ</th><th>បរិយាយ</th><th class="n">រៀល</th><th class="adm"></th></tr></thead><tbody id="exp"></tbody></table></div></div>
+</section>
+
+<section id="closing" hidden>
+ <div class="actions" data-admin><button class="btn" data-act="set-edit">កែតម្លៃកំណត់ (ហ៊ុន/ថ្លៃ/ការប្រាក់/កាត់ទុក)</button></div>
+ <div class="kpis" id="ckpis"></div>
+ <div class="grid2">
+  <div class="card"><h2>បិទបញ្ជីឆ្នាំ <span id="cy"></span></h2><p class="d">ចំណេញត្រូវកាត់ទុក <span id="rr"></span> មុននឹងចែកតាមចំនួនហ៊ុនរបស់សមាជិកនីមួយៗ</p><div class="tbl"><table><tbody id="pl"></tbody></table></div></div>
+  <div class="card"><h2>ការចែកចំណេញតាមហ៊ុន</h2><p class="d">ចំណេញក្នុងមួយហ៊ុន <b id="cpps"></b> រៀល</p><div class="tbl"><table><thead><tr><th>សមាជិក</th><th class="n">ហ៊ុន</th><th class="n">ចំណេញទទួលបាន (រៀល)</th></tr></thead><tbody id="dist"></tbody></table></div></div>
+ </div>
+ <div class="note">ការប្រាក់កម្ចីរាប់ជាចំណូលភ្លាមៗពេលបង្កើតកម្ចី។ ចំណេញចែកត្រូវបានប៉ាន់ស្មានតាមតួលេខបច្ចុប្បន្ន ហើយនឹងចុងក្រោយនៅពេលបិទបញ្ជីចុងឆ្នាំ។</div>
+</section>
+</main>
+<footer>សហគមន៍សន្សំប្រាក់ · ព័ត៌មានទំនាក់ទំនងសមាជិកមិនបង្ហាញជាសាធារណៈ</footer>
+</div>
+<div class="tip" id="tip"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<script src="demo-data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
